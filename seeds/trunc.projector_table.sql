@@ -1,0 +1,3 @@
+TRUNCATE
+  projector_users
+  RESTART IDENTITY CASCADE;
