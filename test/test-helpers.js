@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 // USERS HELPERS
 function makeUsersArray() {
@@ -29,7 +30,7 @@ function makeUsersArray() {
 
 function seedUsers(db, users) {
   const hashedPassUsers = users.map(user => {
-    return { ...user, password: bcrypt.hashSync(user.password) }
+    return { ...user, password: bcrypt.hashSync(user.password, 1) }
   })
 
   return db.from('projector_users').insert(hashedPassUsers)
@@ -91,7 +92,7 @@ function cleanTables(db) {
     `TRUNCATE
       projector_users,
       projector_projects
-      RESTART IDENTITY CASCADE`
+      RESTART IDENTITY CASCADE;`
   )
 }
 
@@ -107,12 +108,13 @@ function seedProjectorTables(db, users, projects) {
     .into('projector_users')
     .insert(users)
     .then(() => db.into('projector_projects').insert(projects))
+    .catch(console.log)
 }
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+  // console.log(user)
   const token = jwt.sign({ user_id: user.id }, secret, {
-    subject: user.user_name,
-    expiresIn: expiry,
+    subject: user.username,
     algorithm: 'HS256'
   })
   return `Bearer ${token}`
@@ -123,5 +125,7 @@ module.exports = {
   makeProjectsArray,
   cleanTables,
   makeProjectorFixtures,
-  seedProjectorTables
+  seedProjectorTables,
+  makeAuthHeader,
+  seedUsers
 }
