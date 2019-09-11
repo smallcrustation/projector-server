@@ -1,7 +1,8 @@
 BEGIN;
 
 TRUNCATE
-  projector_users
+  projector_users,
+  projector_projects
   RESTART IDENTITY CASCADE;
 
 INSERT INTO projector_users(username, email, password)

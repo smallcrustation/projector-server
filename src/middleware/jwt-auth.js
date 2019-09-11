@@ -11,10 +11,11 @@ const requireAuth = async (req, res, next) => {
   token = authToken.slice('bearer '.length, authToken.length)
 
   try{
-    const payload = await AuthService.verifyJwt(token)
+    const payload = await AuthService.verifyJwt(token) // payload ex: { user_id: 3, iat: 1568212680, sub: 'krill' }
+    // console.log(payload)
     const user = await AuthService.getUserWithUserName(
       req.app.get('db'),
-      payload.subject
+      payload.sub
     )
     if(!user){
       return res.status(401).json({ error: 'Unauthorized request' })

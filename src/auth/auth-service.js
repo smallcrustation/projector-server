@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const AuthService = {
 
   getUserWithUserName(db, username) {
+    console.log('USERNAME: ', username)
     return db('projector_users')
       .where({ username })
       .first('*')

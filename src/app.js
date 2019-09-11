@@ -6,6 +6,9 @@ const helmet = require('helmet')
 const { NODE_ENV, CLIENT_ORIGIN } = require('./config')
 
 const authRouter = require('./auth/auth-router')
+const projectsRouter = require('./projects/projects-router')
+
+const { requireAuth } = require('./middleware/jwt-auth')
 
 const app = express()
 const morganOption = { NODE_ENV } === 'production' ? 'tiny' : 'common'
@@ -18,10 +21,7 @@ app.use(
   })
 )
 
-app.get('/', (req, res) => {
-  res.send('Hell, World')
-})
-
+app.use('/api/projects', requireAuth, projectsRouter)
 app.use('/api/auth', authRouter)
 
 app.use(function errorHandler(error, req, res, next) {
