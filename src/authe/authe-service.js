@@ -5,15 +5,15 @@ const jwt = require('jsonwebtoken')
 const AuthService = {
 
   getUserWithUserName(db, username) {
-    console.log('USERNAME: ', username)
+    // console.log('USERNAME: ', username)
     return db('projector_users')
       .where({ username })
       .first('*')
   },
 
   comparePasswords(LoginUserPass, dbUserPass){
-    console.log('LoginUserPass: ', LoginUserPass)
-    console.log('dbUserPass: ', dbUserPass)
+    // console.log('LoginUserPass: ', LoginUserPass)
+    // console.log('dbUserPass: ', dbUserPass)
     return bcrypt.compare(LoginUserPass, dbUserPass)
   },
 

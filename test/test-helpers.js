@@ -43,7 +43,7 @@ function makeProjectsArray() {
       id: 1,
       project_name: 'Project1',
       location: 'test1',
-      budget_original: 111.0,
+      budget_original: 111.00,
       date_created: '2019-09-11T21:54:23.019Z',
       user_id: 1
     },
@@ -51,7 +51,7 @@ function makeProjectsArray() {
       id: 2,
       project_name: 'Project2',
       location: 'test2',
-      budget_original: 222.0,
+      budget_original: 222.00,
       date_created: '2019-09-11T21:54:23.019Z',
       user_id: 2
     },
@@ -59,7 +59,7 @@ function makeProjectsArray() {
       id: 3,
       project_name: 'Project3',
       location: 'test3',
-      budget_original: 333.0,
+      budget_original: 333.00,
       date_created: '2019-09-11T21:54:23.019Z',
       user_id: 3
     },
@@ -67,7 +67,7 @@ function makeProjectsArray() {
       id: 4,
       project_name: 'Project4',
       location: 'test4',
-      budget_original: 444.0,
+      budget_original: 444.00,
       date_created: '2019-09-11T21:54:23.019Z',
       user_id: 1
     },
@@ -108,7 +108,7 @@ function seedProjectorTables(db, users, projects) {
     .into('projector_users')
     .insert(users)
     .then(() => db.into('projector_projects').insert(projects))
-    .catch(console.log)
+    // .catch(console.log)
 }
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {

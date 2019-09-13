@@ -1,5 +1,5 @@
 const express = require('express')
-const AuthService = require('./auth-service')
+const AuthService = require('./authe-service')
 
 const authRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -23,10 +23,9 @@ authRouter.route('/login')
         })
       }
 
-
       const passwordsMatch = await AuthService.comparePasswords(loginUser.password, user.password)
       if(!passwordsMatch){
-        console.log(passwordsMatch)
+        // console.log(passwordsMatch)
         return res.status(400).json({
           error: 'Incorrect username or password'
         })
@@ -37,7 +36,7 @@ authRouter.route('/login')
       res.send({
         authToken: AuthService.createJwt(subject, payload)
       })
-      console.log('TOKEN SENT')
+      // console.log('TOKEN SENT')
     } catch(err){
       next(err)
     }

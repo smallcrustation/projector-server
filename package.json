@@ -9,7 +9,8 @@
     "predeploy": "npm audit",
     "deploy": "git push heroku master",
     "dev": "nodemon src/server.js",
-    "migrate": "postgrator --config postgrator-config.js"
+    "migrate": "postgrator --config postgrator-config.js",
+    "seed": "psql -U krill -d projector -f ./seeds/seed.projector_tables.sql"
   },
   "keywords": [],
   "engines": {

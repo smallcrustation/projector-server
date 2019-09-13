@@ -1,6 +1,6 @@
 CREATE TABLE projector_projects(
   id SERIAL PRIMARY KEY,
-  project_name TEXT NOT NULL UNIQUE,
+  project_name TEXT NOT NULL,
   location TEXT NOT NULL,
   budget_original DECIMAL(12,2) NOT NULL,
   budget_adjusted DECIMAL(12,2),

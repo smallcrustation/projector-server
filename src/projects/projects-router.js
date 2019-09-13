@@ -1,11 +1,9 @@
 const express = require('express')
 const ProjectsService = require('./projects-service')
-const { requireAuth } = require('../middleware/jwt-auth')
 const projectsRouter = express.Router()
 const jsonBodyParser = express.json()
 
-projectsRouter
-  .route('/')
+projectsRouter.route('/')
   // .all(requireAuth) // user attached to req after verification
   .get((req, res, next) => {
     // console.log(req.user)
@@ -16,20 +14,50 @@ projectsRouter
       .catch(next)
   })
 
+  projectsRouter.route('/:project_id')
+    .get(async (req, res, next) => {
+      try{
+        const project = await ProjectsService.getProjectById(req.app.get('db'), req.params.project_id, req.user.id)
+        res.json(ProjectsService.serializeProject(project))
+      } catch(err){
+        next(err)
+      }
+      
+      // ProjectsService.getProjectById(req.app.get('db'), req.params.project_id)
+      // .then(project => {
+      //   res.json(ProjectsService.serializeProject(project))
+      // })
+      // .catch(next)
+    })
+
+    projectsRouter.route('/:project_id/payments')
+      .get(async (req, res, next) => {
+        try{
+          const payments = await ProjectsService.getPaymentsForProject(req.app.get('db'), req.params.project_id, req.user.id)
+          // console.log(payments)
+          // console.log(ProjectsService.serializePayments(payments))
+          res.json(ProjectsService.serializePayments(payments))
+        } catch(err){
+          next(err)
+        }
+      })
+
 projectsRouter.route('/').post(jsonBodyParser, async (req, res, next) => {
   const { project_name, location, budget_original } = req.body
-  const newProject = { project_name, location, budget_original }
+  const newProject = { project_name, location, budget_original}
+  const user = req.user
 
   try {
     const result = await ProjectsService.validateProjectFields(
       req.app.get('db'),
-      newProject
+      newProject,
+      user
     )
     if (result.error) {
       return res.status(404).json(result)
     }
 
-    newProject.user_id = req.user.id
+    newProject.user_id = user.id
     const savedProject = await ProjectsService.insertProject(
       req.app.get('db'),
       newProject
