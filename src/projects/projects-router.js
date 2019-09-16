@@ -3,7 +3,8 @@ const ProjectsService = require('./projects-service')
 const projectsRouter = express.Router()
 const jsonBodyParser = express.json()
 
-projectsRouter.route('/')
+projectsRouter
+  .route('/')
   // .all(requireAuth) // user attached to req after verification
   .get((req, res, next) => {
     // console.log(req.user)
@@ -14,37 +15,43 @@ projectsRouter.route('/')
       .catch(next)
   })
 
-  projectsRouter.route('/:project_id')
-    .get(async (req, res, next) => {
-      try{
-        const project = await ProjectsService.getProjectById(req.app.get('db'), req.params.project_id, req.user.id)
-        res.json(ProjectsService.serializeProject(project))
-      } catch(err){
-        next(err)
-      }
-      
-      // ProjectsService.getProjectById(req.app.get('db'), req.params.project_id)
-      // .then(project => {
-      //   res.json(ProjectsService.serializeProject(project))
-      // })
-      // .catch(next)
-    })
+projectsRouter.route('/:project_id').get(async (req, res, next) => {
+  try {
+    const project = await ProjectsService.getProjectById(
+      req.app.get('db'),
+      req.params.project_id,
+      req.user.id
+    )
+    res.json(ProjectsService.serializeProject(project))
+  } catch (err) {
+    next(err)
+  }
 
-    projectsRouter.route('/:project_id/payments')
-      .get(async (req, res, next) => {
-        try{
-          const payments = await ProjectsService.getPaymentsForProject(req.app.get('db'), req.params.project_id, req.user.id)
-          // console.log(payments)
-          // console.log(ProjectsService.serializePayments(payments))
-          res.json(ProjectsService.serializePayments(payments))
-        } catch(err){
-          next(err)
-        }
-      })
+  // ProjectsService.getProjectById(req.app.get('db'), req.params.project_id)
+  // .then(project => {
+  //   res.json(ProjectsService.serializeProject(project))
+  // })
+  // .catch(next)
+})
+
+projectsRouter.route('/:project_id/payments').get(async (req, res, next) => {
+  try {
+    const payments = await ProjectsService.getPaymentsForProject(
+      req.app.get('db'),
+      req.params.project_id,
+      req.user.id
+    )
+    // console.log(payments)
+    // console.log(ProjectsService.serializePayments(payments))
+    res.json(ProjectsService.serializePayments(payments))
+  } catch (err) {
+    next(err)
+  }
+})
 
 projectsRouter.route('/').post(jsonBodyParser, async (req, res, next) => {
   const { project_name, location, budget_original } = req.body
-  const newProject = { project_name, location, budget_original}
+  const newProject = { project_name, location, budget_original }
   const user = req.user
 
   try {
@@ -54,10 +61,11 @@ projectsRouter.route('/').post(jsonBodyParser, async (req, res, next) => {
       user
     )
     if (result.error) {
-      return res.status(404).json(result)
+      return res.status(400).json(result)
     }
 
     newProject.user_id = user.id
+    console.log(newProject)
     const savedProject = await ProjectsService.insertProject(
       req.app.get('db'),
       newProject

@@ -30,7 +30,7 @@ const ProjectsService = {
       .into('projector_projects')
       .returning('*')
       .then(([project]) => project)
-      .then(project => ProjectsService.getProjectById(db, project.id))
+      .then(project => ProjectsService.getProjectById(db, project.id, project.user_id))
   },
 
   getPaymentsForProject(db, project_id) {

@@ -26,7 +26,8 @@ UsersService = {
     }
 
     // check password is at least 5 chars long and max 72
-    if (newUser.password.length > 4 || newUser.password.length > 72) {
+    if (newUser.password.length < 4 || newUser.password.length > 72) {
+      console.log(newUser.password.length)
       result.error = 'Password must be between 5 and 72 characters'
     }
 
