@@ -25,27 +25,40 @@ const ProjectsService = {
 
   async projectCalcs(db, project) {
     project = project[0]
-    const budget_total =
-      parseFloat(project.budget_original) + parseFloat(project.budget_adjusted)
+    const budget_total = !project.budget_adjusted
+      ? parseFloat(project.budget_original) // if there isn't an adjusted budget
+      : parseFloat(project.budget_original) +
+        parseFloat(project.budget_adjusted)
 
     try {
       const payments = await this.getPaymentsForProject(db, project.id)
-      let total_completed = 0.0
-      payments.forEach(
-        payment => (total_completed += parseFloat(payment.total_amount))
-      )
+      // check if there are payments
+      if (payments.length > 0) {
+        console.log('payments!')
+        let total_completed = 0.0
+        payments.forEach(
+          payment => (total_completed += parseFloat(payment.total_amount))
+        )
 
-      const total_prev_payments =
-        total_completed - payments[payments.length - 1].total_amount
+        const total_prev_payments =
+          total_completed - payments[payments.length - 1].total_amount
 
-      const current_payment = total_completed - total_prev_payments
+        const current_payment = total_completed - total_prev_payments
 
+        return {
+          ...project,
+          budget_total,
+          total_completed,
+          total_prev_payments,
+          current_payment
+        }
+      }
       return {
         ...project,
         budget_total,
-        total_completed,
-        total_prev_payments,
-        current_payment
+        total_completed: 0,
+        total_prev_payments: 0,
+        current_payment: 0
       }
     } catch (err) {
       console.log(err)
