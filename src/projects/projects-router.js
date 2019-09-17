@@ -22,7 +22,10 @@ projectsRouter.route('/:project_id').get(async (req, res, next) => {
       req.params.project_id,
       req.user.id
     )
-    res.json(ProjectsService.serializeProject(project))
+    
+    const calculatedProject = await ProjectsService.projectCalcs(req.app.get('db'), project)
+
+    res.json(ProjectsService.serializeProject(calculatedProject))
   } catch (err) {
     next(err)
   }

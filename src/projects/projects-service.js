@@ -10,18 +10,46 @@ const ProjectsService = {
   },
 
   async getProjectById(db, project_id, user_id) {
-
     const project = await db
       .from('projector_projects')
       .select('*')
-      .where({id: project_id})
-      .andWhere({user_id})
+      .where({ id: project_id })
+      .andWhere({ user_id })
 
-    if(project.length < 1){
+    if (project.length < 1) {
       throw 'Not Authorized'
     }
 
-    return project;
+    return project
+  },
+
+  async projectCalcs(db, project) {
+    project = project[0]
+    const budget_total =
+      parseFloat(project.budget_original) + parseFloat(project.budget_adjusted)
+
+    try {
+      const payments = await this.getPaymentsForProject(db, project.id)
+      let total_completed = 0.0
+      payments.forEach(
+        payment => (total_completed += parseFloat(payment.total_amount))
+      )
+
+      const total_prev_payments =
+        total_completed - payments[payments.length - 1].total_amount
+
+      const current_payment = total_completed - total_prev_payments
+
+      return {
+        ...project,
+        budget_total,
+        total_completed,
+        total_prev_payments,
+        current_payment
+      }
+    } catch (err) {
+      console.log(err)
+    }
   },
 
   insertProject(db, newProject) {
@@ -30,13 +58,16 @@ const ProjectsService = {
       .into('projector_projects')
       .returning('*')
       .then(([project]) => project)
-      .then(project => ProjectsService.getProjectById(db, project.id, project.user_id))
+      .then(project =>
+        ProjectsService.getProjectById(db, project.id, project.user_id)
+      )
   },
 
   getPaymentsForProject(db, project_id) {
-      return db('projector_payments')
-        .select('*')
-        .where('project_id', project_id)
+    console.log('getPaymentsForProject: ', project_id)
+    return db('projector_payments')
+      .select('*')
+      .where('project_id', project_id)
   },
 
   async validateProjectFields(db, newProject, user) {
@@ -92,7 +123,11 @@ const ProjectsService = {
       amount_spent: projectData.amount_spent,
       date_created: projectData.date_created,
       date_modified: projectData.date_modified,
-      user_id: projectData.user_id
+      user_id: projectData.user_id,
+      budget_total: projectData.budget_total,
+      total_completed: projectData.total_completed,
+      total_prev_payments: projectData.total_prev_payments,
+      current_payment: projectData.current_payment
     }
   },
 
@@ -101,7 +136,6 @@ const ProjectsService = {
   },
 
   serializePayment(payment) {
-
     const projectTree = new Treeize()
 
     // treeize only accepts arrays of objs, and we want to use a single obj

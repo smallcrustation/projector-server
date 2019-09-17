@@ -4,6 +4,7 @@ CREATE TABLE projector_projects(
   location TEXT NOT NULL,
   budget_original DECIMAL(12,2) NOT NULL,
   budget_adjusted DECIMAL(12,2),
+  -- budget_total DECIMAL(12,2) NOT NULL,
   amount_spent DECIMAL(12,2),
   date_created TIMESTAMP NOT NULL DEFAULT now(),
   date_modified TIMESTAMP,
