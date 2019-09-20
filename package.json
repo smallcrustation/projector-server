@@ -10,6 +10,7 @@
     "deploy": "git push heroku master",
     "dev": "nodemon src/server.js",
     "migrate": "postgrator --config postgrator-config.js",
+    "migrate:production": "env SSL=true DATABSE_URL=$(heroku config:get DATABASE_URL) npm run migrate",
     "seed": "psql -U krill -d projector -f ./seeds/seed.projector_tables.sql"
   },
   "keywords": [],

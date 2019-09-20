@@ -8,5 +8,5 @@ module.exports = {
   CLIENT_ORIGIN: process.env.NODE_ENV === 'production'?
     'https://projector.krill.now.sh':'http://localhost:3000',
 
-  JWT_SECRET: process.env.JWT_SECRET || 'secret'
+  JWT_SECRET: process.env.JWT_SECRET || 'secret',
 }
