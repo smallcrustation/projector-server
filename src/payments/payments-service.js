@@ -26,7 +26,7 @@ const PaymentsService = {
     if (newPayment.total_amount < 0) {
       result.error = `total_amount must be positive`
     }
-    const regex = /^\d+(?:\.\d{0,2})$/
+    const regex = /^(\$)?([1-9]{1}[0-9]{0,2})(\,\d{3})*(\.\d{2})?$|^(\$)?([1-9]{1}[0-9]{0,2})(\d{3})*(\.\d{2})?$|^(0)?(\.\d{2})?$|^(\$0)?(\.\d{2})?$|^(\$\.)(\d{2})?$/gm
     if (!regex.test(newPayment.total_amount)) result.error = 'total_amount is invalid'
 
     return result

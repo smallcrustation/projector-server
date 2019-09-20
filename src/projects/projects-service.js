@@ -34,7 +34,7 @@ const ProjectsService = {
       const payments = await this.getPaymentsForProject(db, project.id)
       // check if there are payments
       if (payments.length > 0) {
-        console.log('payments!')
+        // console.log('payments!')
         let total_completed = 0.0
         payments.forEach(
           payment => (total_completed += parseFloat(payment.total_amount))
@@ -61,7 +61,7 @@ const ProjectsService = {
         current_payment: 0
       }
     } catch (err) {
-      console.log(err)
+      return res(400).json({error: err})
     }
   },
 

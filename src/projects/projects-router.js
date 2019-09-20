@@ -37,6 +37,9 @@ projectsRouter.route('/:project_id').get(async (req, res, next) => {
   // .catch(next)
 })
 
+// ADD PROJECTS ROUTER 
+// projectsRouter.use('/:project_id/paymentsRequest', )
+
 projectsRouter.route('/:project_id/payments').get(async (req, res, next) => {
   try {
     const payments = await ProjectsService.getPaymentsForProject(
@@ -68,7 +71,7 @@ projectsRouter.route('/').post(jsonBodyParser, async (req, res, next) => {
     }
 
     newProject.user_id = user.id
-    console.log(newProject)
+    // console.log(newProject)
     const savedProject = await ProjectsService.insertProject(
       req.app.get('db'),
       newProject
