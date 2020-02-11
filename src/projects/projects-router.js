@@ -15,29 +15,45 @@ projectsRouter
       .catch(next)
   })
 
-projectsRouter.route('/:project_id').get(async (req, res, next) => {
-  try {
-    const project = await ProjectsService.getProjectById(
-      req.app.get('db'),
-      req.params.project_id,
-      req.user.id
-    )
-    
-    const calculatedProject = await ProjectsService.projectCalcs(req.app.get('db'), project)
+// GET OR DELETE project by id
+projectsRouter
+  .route('/:project_id')
+  .get(async (req, res, next) => {
+    try {
+      const project = await ProjectsService.getProjectById(
+        req.app.get('db'),
+        req.params.project_id,
+        req.user.id
+      )
 
-    res.json(ProjectsService.serializeProject(calculatedProject))
-  } catch (err) {
-    next(err)
-  }
+      const calculatedProject = await ProjectsService.projectCalcs(
+        req.app.get('db'),
+        project
+      )
 
-  // ProjectsService.getProjectById(req.app.get('db'), req.params.project_id)
-  // .then(project => {
-  //   res.json(ProjectsService.serializeProject(project))
-  // })
-  // .catch(next)
-})
+      res.json(ProjectsService.serializeProject(calculatedProject))
+    } catch (err) {
+      next(err)
+    }
 
-// ADD PROJECTS ROUTER 
+  })
+  .delete(async (req, res, next) => {
+    try{
+      ProjectsService.deleteProjectById(
+        res.app.get('db'),
+        req.params.project_id,
+        req.user.id
+      )
+
+      res.status(200).end()
+
+    } catch (err){
+      // console.log('err')
+      next(err)
+    }
+  })
+
+// ADD PROJECTS ROUTER
 // projectsRouter.use('/:project_id/paymentsRequest', )
 
 projectsRouter.route('/:project_id/payments').get(async (req, res, next) => {

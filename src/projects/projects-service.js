@@ -23,6 +23,20 @@ const ProjectsService = {
     return project
   },
 
+  async deleteProjectById(db, project_id, user_id) {
+    try{
+      const delProj = await db('projector_projects')
+        .where({ id: project_id })
+        .andWhere({ user_id })
+        .del()
+      
+        return delProj
+    } catch(e){
+      console.log(e)
+    }
+   
+  },
+
   async projectCalcs(db, project) {
     project = project[0]
     const budget_total = !project.budget_adjusted
@@ -61,7 +75,7 @@ const ProjectsService = {
         current_payment: 0
       }
     } catch (err) {
-      return res(400).json({error: err})
+      return res(400).json({ error: err })
     }
   },
 
@@ -77,7 +91,7 @@ const ProjectsService = {
   },
 
   getPaymentsForProject(db, project_id) {
-    console.log('getPaymentsForProject: ', project_id)
+    // console.log('getPaymentsForProject: ', project_id)
     return db('projector_payments')
       .select('*')
       .where('project_id', project_id)

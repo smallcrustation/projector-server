@@ -4,7 +4,7 @@ module.exports = {
   NODE_ENV: process.env.NODE_ENV || 'development',
 
   DATABASE_URL: process.env.NODE_ENV === 'production'?
-  process.env.DATABASE_URL : 'postgresql://krill@localhost/projector',
+  process.env.DATABASE_URL : process.env.LOCAL_DB_URL,
 
   CLIENT_ORIGIN: process.env.NODE_ENV === 'production'?
     'https://projector.krill.now.sh':'http://localhost:3000',
