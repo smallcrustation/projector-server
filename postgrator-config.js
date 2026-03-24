@@ -1,5 +1,7 @@
 require('dotenv').config()
 
+const migrationSsl = process.env.MIGRATION_DB_SSL === 'true'
+
 module.exports = {
   migrationDirectory: 'migrations',
   driver: 'pg',
@@ -8,5 +10,5 @@ module.exports = {
   database: process.env.MIGRATION_DB_NAME,
   username: process.env.MIGRATION_DB_USER,
   password: process.env.MIGRATION_DB_PASS,
-  ssl: true
+  ssl: migrationSsl
 }

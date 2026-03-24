@@ -1,5 +1,5 @@
 const { JWT_SECRET } = require('../config')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const AuthService = {
